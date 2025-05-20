@@ -21,7 +21,14 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* include components and new imports */
+    "baseUrl": "src",
+    "paths": {
+    "@/*": ["*"]
+    }
+    
   },
   "include": ["src"]
 }
