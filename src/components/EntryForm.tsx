@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
 import { ref, push, set } from "firebase/database";
 
 export default function EntryForm() {
@@ -10,9 +10,10 @@ export default function EntryForm() {
     e.preventDefault();
     if (!entry.trim()) return;
 
-    const entriesRef = ref(db, "entries");
-    const newEntryRef = push(entriesRef); // generate unique key
-
+  
+    const userId = auth.currentUser?.uid;
+    const entriesRef = ref(db, `users/${userId}/entries`);
+    const newEntryRef = push(entriesRef);
     await set(newEntryRef, {
       key: newEntryRef.key,     // store the key with entry
       text: entry,              // entry content

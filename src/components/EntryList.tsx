@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
 import { ref, onValue, remove } from "firebase/database";
 import { Trash2 } from "lucide-react";
 
@@ -14,7 +14,8 @@ export default function EntryList() {
 
   useEffect(() => {
     // listen to Firebase for real-time updates
-    const entriesRef = ref(db, "entries");
+    const userId = auth.currentUser?.uid;
+    const entriesRef = ref(db, `users/${userId}/entries`);
 
     const unsubscribe = onValue(entriesRef, (snapshot) => {
       const data = snapshot.val();
@@ -35,7 +36,10 @@ export default function EntryList() {
 
   // handle delete button click
   const handleDelete = async (key: string) => {
-    await remove(ref(db, `entries/${key}`));
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+  
+    await remove(ref(db, `users/${userId}/entries/${key}`));
   };
 
   return (
