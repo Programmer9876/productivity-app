@@ -1,3 +1,4 @@
+/// <reference types="firebase" />
 import { useState, useEffect } from "react";
 import { db } from "./firebase";
 import { ref, push, onValue, set, remove } from "firebase/database";
