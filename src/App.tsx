@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { db } from "./firebase";
-import { ref, push, onValue } from "firebase/database";
+import { ref, push, onValue, set, remove } from "firebase/database";
+import { Trash2 } from "lucide-react";
+
 
 interface Entry {
+  key: string;
   text: string;
   timestamp: number;
 }
@@ -12,16 +15,25 @@ function App() {
   const [entries, setEntries] = useState<Entry[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
+    //prevent reload on submit
     e.preventDefault();
+    //prevent empty entry
     if (!entry.trim()) return;
-
+    //create reference to entry path in database
     const entriesRef = ref(db, "entries");
-    push(entriesRef, {
+    const newEntryRef = push(entriesRef);
+    set(newEntryRef, {
+      key: newEntryRef.key,
       text: entry,
       timestamp: Date.now(),
     });
 
+
     setEntry("");
+  };
+  const handleDelete = (key: string) => {
+    const entryRef = ref(db, `entries/${key}`);
+    remove(entryRef);
   };
   //react hook
   useEffect(() => {
@@ -36,9 +48,11 @@ function App() {
 
       if (data) {
         //loop through starting with newest entry
-        Object.values(data).forEach((item) => {
+        Object.entries(data).forEach(([key, value]) => {
           //newest is first in
-          loaded.push(item as Entry);
+          const entryData = value as Omit<Entry, 'key'>; // ensure it has text + timestamp
+          // copies all properties from entryData into a new object and then adds/overwrites the key field
+          loaded.push({ ...entryData, key});
         });
 
         // Sort newest to last and oldest to first
@@ -85,8 +99,8 @@ function App() {
             <li
             //list entries with a simple section header flex justify-between separates log text and delete button items center allign vertical and rest for light box
               key={i}
-              className="flex justify-between items-start bg-gray-100 border border-gray-300 p-3 rounded"
-            >
+              className="flex justify-between items-start bg-gray-100 border border-gray-300 p-3 rounded-lg shadow w-[350px]"
+              >
               <div>
                 <div>{e.text}</div>
                 <div className="text-xs text-gray-500">
@@ -95,10 +109,11 @@ function App() {
               </div>
               <button
                 //delete button
-                className="text-red-500 hover:underline text-sm"
-                //onClick={() => handleDelete(e.key!)}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+
+                onClick={() => handleDelete(e.key!)}
               >
-                Delete
+                <Trash2 size={16} /> Delete
               </button>
             </li>
           ))}
