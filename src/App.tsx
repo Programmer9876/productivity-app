@@ -6,13 +6,15 @@ import { auth, db } from "@/firebase";
 import EntryForm from "@/components/EntryForm";
 import EntryList from "@/components/EntryList";
 import Login from "@/components/Login";
-import {checkIfNewDayAndClearEntries} from "@/components/checkIfNewDayAndClearEntries"
+import {checkIfNewDayAndClearEntries} from "@/utils/checkIfNewDayAndClearEntries"
 import SignInPage from "@/components/SignInPage";
 
 function App() {
   const [user, setUser] = useState<any>(null);
   const [showSignInPage, setShowSignInPage] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [hideEntries, setHideEntries] = useState(false);
+
 
 
   useEffect(() => {
@@ -27,7 +29,7 @@ function App() {
 
     const uid = firebaseUser.uid;
     //get today and last signin
-    const today = new Date().toDateString();
+    const today = new Date().toISOString().slice(0, 10);
     const lastSignInRef = ref(db, `users/${uid}/lastSignIn`);
     //if last sign-in not today log out
     try {
@@ -44,19 +46,20 @@ function App() {
     }
   });
 
-  return () => unsubscribe();
-    return () => unsubscribe(); // clean up listener
+  return () => unsubscribe(); // clean up listener
   }, []);
-  //hand daily signin
+  //handle daily signin
   const handleDailySignIn = async () => {
     if (!user) return;
   
     const uid = user.uid;
-    const today = new Date().toDateString();
-    
-    await checkIfNewDayAndClearEntries(uid); // archive entries
-    await set(ref(db, `users/${uid}/lastSignIn`), today); // mark today's sign-in
-    setShowSignInPage(false); // unlock app UI
+    const today = new Date().toISOString().slice(0, 10);
+
+    await checkIfNewDayAndClearEntries(uid);
+
+    await set(ref(db, `users/${uid}/lastSignIn`), today);
+    setHideEntries(true); // visually clear the log
+    setShowSignInPage(false);
   };
   if (checking) return null;
   if (!user) return <Login />;
@@ -81,7 +84,7 @@ function App() {
       <EntryForm />
 
       {/* list of entries */}
-      <EntryList />
+      <EntryList hide={hideEntries} />
     </div>
   );
 }

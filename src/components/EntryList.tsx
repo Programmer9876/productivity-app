@@ -3,14 +3,18 @@ import { db, auth } from "../firebase";
 import { ref, onValue, remove } from "firebase/database";
 import { Trash2 } from "lucide-react";
 
-interface Entry {
+export interface Entry {
   key: string;
   text: string;
   timestamp: number;
 }
+export interface Props {
+    hide: boolean;
+  }
 
-export default function EntryList() {
+export default function EntryList({ hide }: { hide: boolean }) {
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [hasHidden, setHasHidden] = useState(false); 
 
   useEffect(() => {
     // listen to Firebase for real-time updates
@@ -33,7 +37,15 @@ export default function EntryList() {
 
     return () => unsubscribe(); // clean up listener on unmount
   }, []);
+  //  UI-only hide logic — once per day
+  useEffect(() => {
+    if (hide && !hasHidden) {
+        console.log("🔥 Hiding entries from frontend");
+      setHasHidden(true); // hide just once after sign-in
+    }
+  }, [hide, hasHidden]);
 
+  if (hide && !hasHidden) return null; // ⛔ don’t show entries yet
   // handle delete button click
   const handleDelete = async (key: string) => {
     const userId = auth.currentUser?.uid;
