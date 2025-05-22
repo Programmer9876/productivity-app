@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, } from "react";
 import { db, auth } from "../firebase";
 import { ref, onValue, remove } from "firebase/database";
 import { Trash2 } from "lucide-react";
+
 
 export interface Entry {
   key: string;
   text: string;
   timestamp: number;
 }
-export interface Props {
-    hide: boolean;
-  }
 
-export default function EntryList({ hide }: { hide: boolean }) {
-  const [entries, setEntries] = useState<Entry[]>([]);
-  const [hasHidden, setHasHidden] = useState(false); 
+  export default function EntryList() {
+    const [entries, setEntries] = useState<Entry[]>([]);
+   
 
   useEffect(() => {
     // listen to Firebase for real-time updates
     const userId = auth.currentUser?.uid;
-    const entriesRef = ref(db, `users/${userId}/entries`);
+    if (!userId) return;
 
+    const entriesRef = ref(db, `users/${userId}/entries`);
     const unsubscribe = onValue(entriesRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -37,15 +36,9 @@ export default function EntryList({ hide }: { hide: boolean }) {
 
     return () => unsubscribe(); // clean up listener on unmount
   }, []);
-  //  UI-only hide logic — once per day
-  useEffect(() => {
-    if (hide && !hasHidden) {
-        console.log("🔥 Hiding entries from frontend");
-      setHasHidden(true); // hide just once after sign-in
-    }
-  }, [hide, hasHidden]);
+  
 
-  if (hide && !hasHidden) return null; // ⛔ don’t show entries yet
+
   // handle delete button click
   const handleDelete = async (key: string) => {
     const userId = auth.currentUser?.uid;

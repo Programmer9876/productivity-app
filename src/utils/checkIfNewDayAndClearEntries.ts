@@ -1,4 +1,4 @@
-import { ref, get, set } from "firebase/database";
+import { ref, get, set, remove } from "firebase/database";
 import { db } from "@/firebase";
 
 export const checkIfNewDayAndClearEntries = async (uid: string) => {
@@ -12,4 +12,6 @@ export const checkIfNewDayAndClearEntries = async (uid: string) => {
   const historyRef = ref(db, `users/${uid}/history/${dateKey}`);
 
   await set(historyRef, entries); // Archive entries to history
+  // Delete original entries
+  await remove(entriesRef);
 };

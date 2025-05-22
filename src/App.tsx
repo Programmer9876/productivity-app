@@ -13,7 +13,6 @@ function App() {
   const [user, setUser] = useState<any>(null);
   const [showSignInPage, setShowSignInPage] = useState(false);
   const [checking, setChecking] = useState(true);
-  const [hideEntries, setHideEntries] = useState(false);
 
 
 
@@ -23,6 +22,7 @@ function App() {
       setUser(firebaseUser);
 
     if (!firebaseUser) {
+      setUser(null);
       setChecking(false); // done checking
       return;
     }
@@ -40,9 +40,9 @@ function App() {
         setShowSignInPage(true); // triggers SignInPage
       }
     } catch (error) {
-      console.error("Error checking lastSignIn:", error);
     } finally {
       setChecking(false); // ensures app renders once decision is made
+      
     }
   });
 
@@ -58,14 +58,12 @@ function App() {
     await checkIfNewDayAndClearEntries(uid);
 
     await set(ref(db, `users/${uid}/lastSignIn`), today);
-    setHideEntries(true); // visually clear the log
     setShowSignInPage(false);
   };
   if (checking) return null;
   if (!user) return <Login />;
-  if (showSignInPage) {
-    return <SignInPage onSignedIn={handleDailySignIn} />;
-  }
+  if (showSignInPage) return <SignInPage onSignedIn={handleDailySignIn} />;
+  
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
@@ -84,7 +82,7 @@ function App() {
       <EntryForm />
 
       {/* list of entries */}
-      <EntryList hide={hideEntries} />
+      <EntryList  />
     </div>
   );
 }
