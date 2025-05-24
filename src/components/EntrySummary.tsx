@@ -11,7 +11,7 @@ type Entry = {
 };
 
 export default function EntrySummary() {
-  const [todayEntries, setTodayEntries] = useState<Entry[]>([]);
+  const [_todayEntries, setTodayEntries] = useState<Entry[]>([]);
   const [cleanPoints, setCleanPoints] = useState(0);
   const [cheatCounts, setCheatCounts] = useState({ t1: 0, t2: 0, t3: 0 });
 
