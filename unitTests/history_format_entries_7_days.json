@@ -1,0 +1,86 @@
+{
+  "2025-05-23": {
+    "-FakeID0000": {
+      "key": "-FakeID0000",
+      "text": "log entry 1-1",
+      "timestamp": 1748039438028
+    },
+    "-FakeID0001": {
+      "key": "-FakeID0001",
+      "text": "log entry 1-2",
+      "timestamp": 1748039448028
+    }
+  },
+  "2025-05-22": {
+    "-FakeID0010": {
+      "key": "-FakeID0010",
+      "text": "log entry 2-1",
+      "timestamp": 1747953038028
+    },
+    "-FakeID0011": {
+      "key": "-FakeID0011",
+      "text": "log entry 2-2",
+      "timestamp": 1747953048028
+    }
+  },
+  "2025-05-21": {
+    "-FakeID0020": {
+      "key": "-FakeID0020",
+      "text": "log entry 3-1",
+      "timestamp": 1747866638028
+    },
+    "-FakeID0021": {
+      "key": "-FakeID0021",
+      "text": "log entry 3-2",
+      "timestamp": 1747866648028
+    }
+  },
+  "2025-05-20": {
+    "-FakeID0030": {
+      "key": "-FakeID0030",
+      "text": "log entry 4-1",
+      "timestamp": 1747780238028
+    },
+    "-FakeID0031": {
+      "key": "-FakeID0031",
+      "text": "log entry 4-2",
+      "timestamp": 1747780248028
+    }
+  },
+  "2025-05-19": {
+    "-FakeID0040": {
+      "key": "-FakeID0040",
+      "text": "log entry 5-1",
+      "timestamp": 1747693838028
+    },
+    "-FakeID0041": {
+      "key": "-FakeID0041",
+      "text": "log entry 5-2",
+      "timestamp": 1747693848028
+    }
+  },
+  "2025-05-18": {
+    "-FakeID0050": {
+      "key": "-FakeID0050",
+      "text": "log entry 6-1",
+      "timestamp": 1747607438028
+    },
+    "-FakeID0051": {
+      "key": "-FakeID0051",
+      "text": "log entry 6-2",
+      "timestamp": 1747607448028
+    }
+  },
+  "2025-05-17": {
+    "-FakeID0060": {
+      "key": "-FakeID0060",
+      "text": "log entry 7-1",
+      "timestamp": 1747521038028
+    },
+    "-FakeID0061": {
+      "key": "-FakeID0061",
+      "text": "log entry 7-2",
+      "timestamp": 1747521048028
+    }
+  }
+}

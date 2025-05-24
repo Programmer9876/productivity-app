@@ -37,7 +37,7 @@ export default function BarChartComponent() {
           const now = new Date();
           //get 7 days ago
           const sevenDaysAgo = new Date();
-          sevenDaysAgo.setDate(now.getDate() - 6); // include today
+          sevenDaysAgo.setDate(now.getDate() - 7); // include today
       
           const filtered = Object.entries(raw)
       .filter(([dateStr]) => {

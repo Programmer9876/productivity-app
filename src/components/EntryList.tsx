@@ -8,6 +8,12 @@ export interface Entry {
   key: string;
   text: string;
   timestamp: number;
+  tier?: number; // 0 = clean entry, >0 = cheat
+  source: "entries" | "cheats";
+}
+
+export interface Cheat extends Entry {
+  tier: 1 | 2 | 3; // required and restricted
 }
 
   export default function EntryList() {
@@ -15,36 +21,62 @@ export interface Entry {
    
 
   useEffect(() => {
-    // listen to Firebase for real-time updates
     const userId = auth.currentUser?.uid;
+    
     if (!userId) return;
 
     const entriesRef = ref(db, `users/${userId}/entries`);
-    const unsubscribe = onValue(entriesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const loaded: Entry[] = Object.entries(data).map(([key, item]) => ({
-          ...(item as Entry),
-          key, // ensure key is preserved
-        }));
-        loaded.sort((a, b) => b.timestamp - a.timestamp); // newest first
-        setEntries(loaded);
-      } else {
-        setEntries([]); // no entries
-      }
+    const cheatsRef = ref(db, `users/${userId}/cheats`);
+
+    const handleSnapshot = (entriesData: any, cheatsData: any) => {
+    const all: Entry[] = [];
+
+      if (entriesData) {
+          all.push(
+            ...Object.entries(entriesData).map(([key, item]: [string, any]) => ({
+              ...item,
+              key,
+              tier: 0,
+              source: "entries",
+            }))
+          );
+        }
+
+        if (cheatsData) {
+          all.push(
+            ...Object.entries(cheatsData).map(([key, item]: [string, any]) => ({
+              ...item,
+              key,
+              tier: item.tier ?? 1,
+              source: "cheats",
+            }))
+          );
+        }
+
+      all.sort((a, b) => b.timestamp - a.timestamp);
+      setEntries(all);
+    };
+
+    const unsubEntries = onValue(entriesRef, (entriesSnap) => {
+      const entriesData = entriesSnap.val();
+
+      const unsubCheats = onValue(cheatsRef, (cheatsSnap) => {
+        const cheatsData = cheatsSnap.val();
+        handleSnapshot(entriesData, cheatsData);
+      });
+
+      // Cleanup cheats listener inside entries listener
+      return () => unsubCheats();
     });
 
-    return () => unsubscribe(); // clean up listener on unmount
+    return () => unsubEntries(); // cleanup entries listener
   }, []);
-  
 
-
-  // handle delete button click
-  const handleDelete = async (key: string) => {
+  // Only deletes from /entries and/cheats
+  const handleDelete = async (key: string, source: "entries" | "cheats") => {
     const userId = auth.currentUser?.uid;
     if (!userId) return;
-  
-    await remove(ref(db, `users/${userId}/entries/${key}`));
+    await remove(ref(db, `users/${userId}/${source}/${key}`));
   };
 
   return (
@@ -52,23 +84,27 @@ export interface Entry {
       {entries.map((e) => (
         <li
           key={e.key}
-          // flex layout: left for text/timestamp, right for delete
           className="flex justify-between items-start bg-gray-100 border border-gray-300 p-3 rounded shadow-sm"
         >
           <div>
-            {/* log content */}
-            <div>{e.text}</div>
-            {/* timestamp, formatted */}
+            <div>
+              {e.text}
+              {e.tier > 0 && (
+                <span className="text-red-600 ml-2">[Tier {e.tier} Cheat]</span>
+              )}
+              
+            </div>
             <div className="text-xs text-gray-500">
               {new Date(e.timestamp).toLocaleString()}
             </div>
           </div>
+
           <button
-          onClick={() => handleDelete(e.key)}
-          className="flex items-center gap-1 text-red-500 hover:text-red-600 text-sm"
-        >
-          <Trash2 size={16} />
-          Delete
+            onClick={() => handleDelete(e.key, e.source)}
+            className="flex items-center gap-1 text-red-500 hover:text-red-600 text-sm"
+          >
+            <Trash2 size={16} />
+            Delete
           </button>
         </li>
       ))}

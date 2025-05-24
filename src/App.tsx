@@ -62,7 +62,7 @@ function App() {
     const uid = user.uid;
     const today = new Date().toISOString().slice(0, 10);
 
-    await checkIfNewDayAndClearEntries(uid);
+    await checkIfNewDayAndClearEntries();
 
     await set(ref(db, `users/${uid}/lastSignIn`), today);
     setShowSignInPage(false);

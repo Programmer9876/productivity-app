@@ -2,12 +2,13 @@ import { Card } from "@/components/ui/card";
 import BarChartComponent from "@/components/BarChartComponent";
 import EntrySummary from "../components/EntrySummary";
 import { ProgressBar } from "@/components/ProgressBar";
+import StreakTracker from "@/components/StreakTracker";
+
+
 
 export default function Dashboard() {
 
   // You can replace these mock values with actual logic later
-  const currentStreak = 3;
-  const longestStreak = 7;
   const entriesToday = 3;
   const entryGoal = 4;
 
@@ -20,11 +21,10 @@ export default function Dashboard() {
         </div>
         <EntrySummary />
 
-        <div className="text-sm text-muted-foreground space-y-1">
-          <p>📅 Current Streak: {currentStreak} days</p>
-          <p>🔥 Longest Streak: {longestStreak} days</p>
-          <p>📈 Avg Entries: 2.7/day</p>
-        </div>
+        <div className="p-4 space-y-6">
+      <StreakTracker />
+      {/* Future: Entry stats, cheat log, punishment generator */}
+    </div>
 
         <div>
           <p className="text-sm text-muted-foreground mb-1">
