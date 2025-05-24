@@ -8,7 +8,7 @@ export interface Entry {
   key: string;
   text: string;
   timestamp: number;
-  tier?: number; // 0 = clean entry, >0 = cheat
+  tier: number; // 0 = clean entry, >0 = cheat
   source: "entries" | "cheats";
 }
 
@@ -36,7 +36,7 @@ export interface Cheat extends Entry {
             ...Object.entries(entriesData).map(([key, item]: [string, any]) => ({
               ...item,
               key,
-              tier: 0,
+              tier: item.tier ?? 0,
               source: "entries",
             }))
           );
