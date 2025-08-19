@@ -37,7 +37,7 @@ export const checkIfNewDayAndClearEntries = async () => {
   // Clear current day logs
   await remove(entriesRef);
   await remove(cheatsRef);
-  await set(lastDateRef, todayStr);
+  await set(lastDateRef, lastDate);
 
   console.log("✅ Archived to history and reset entries/cheats");
 };
