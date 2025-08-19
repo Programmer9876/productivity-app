@@ -11,8 +11,7 @@ export default function Login() {
     const [error, setError] = useState("");
     const [isSignUp, setIsSignUp] = useState(false);    
     const handleResetPassword = async () => {
-  setError?.("");              // if you have setError
-  // setInfo?.("");            // optional info state
+  setError?.("");              
   try {
     const addr = email.trim();
     if (!addr) {
@@ -24,7 +23,7 @@ export default function Login() {
       url: "https://productivity-app-xi-beryl.vercel.app//login?reset=done",
     });
     await sendPasswordResetEmail(auth, addr);
-    setInfo?.("Password reset email sent.");
+    setError?.("Password reset email sent.");
   } catch (err: any) {
     const map: Record<string, string> = {
       "auth/missing-email": "Enter your email.",
@@ -113,6 +112,6 @@ export default function Login() {
   );
 }
 
-function setInfo(arg0: string) {
-  throw new Error("Function not implemented.");
-}
+
+
+
