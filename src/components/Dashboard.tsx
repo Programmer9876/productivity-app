@@ -3,13 +3,35 @@ import BarChartComponent from "@/components/BarChartComponent";
 import EntrySummary from "../components/EntrySummary";
 import { ProgressBar } from "@/components/ProgressBar";
 import StreakTracker from "@/components/StreakTracker";
+import { getDatabase, ref, DataSnapshot, onValue} from "firebase/database";
+import { auth } from "@/firebase";
+import { useEffect, useState } from "react";
 
+
+export function countUserEntries() {
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error("Not signed in");
+
+  const [count, setCount] = useState<number>(0);
+
+  useEffect(() => {
+    if (!uid) return;
+    const r = ref(getDatabase(), `users/${uid}/entries`);
+    const unsub = onValue(r, (snap: DataSnapshot) => {
+      const v = snap.val() as Record<string, unknown> | null;
+      setCount(v ? Object.keys(v).length : 0);    });
+    return () => unsub();
+  }, [uid]);
+
+  return count;// direct children under entries
+}
 
 
 export default function Dashboard() {
 
   // You can replace these mock values with actual logic later
-  const entriesToday = 3;
+ 
+  const entriesToday = countUserEntries();
   const entryGoal = 4;
 
   return (
