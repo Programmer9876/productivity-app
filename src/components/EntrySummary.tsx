@@ -17,7 +17,6 @@ export default function EntrySummary() {
 
   const today = new Date().toLocaleDateString();
   const focusHours = 4.5;
-  const punishmentsQueued = 1;
 
   useEffect(() => {
     const uid = auth.currentUser?.uid;
@@ -72,7 +71,6 @@ export default function EntrySummary() {
         <p>❌ Tier 2 Cheats: <strong>{cheatCounts.t2}</strong></p>
         <p>💥 Tier 3 Cheats: <strong>{cheatCounts.t3}</strong></p>
         <li>🧠 Focus Hours Logged: {focusHours}</li>
-        <li>⏱️ Punishments Queued: {punishmentsQueued}</li>
       </ul>
     </div>
   );
