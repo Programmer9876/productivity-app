@@ -15,11 +15,11 @@ To create a web app recording activities, cheats, clean days, and punishments an
 - Daily entry log with wipe
 - Dashboard with bar chart, daily summary
 - rotating quote
-- Cheat, Punishment Entries
+- Cheat Entries
 - Create Account/Reset password
 - streak
 
 
 ## To Add
-- Clean Days
+- Pomodoro Timer
 - avg entries statistics
