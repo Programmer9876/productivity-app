@@ -6,10 +6,11 @@ To create a web app recording activities, cheats, clean days, and punishments an
 - Vite
 - Firebase
 - React
-- GPT-4 (with modifications)
+- Vercel
+- TypeScript
 
 ## Current Features
-- Sign in / Sign out
+- Sign in / Sign out / Account creation/ Password reset
 - Per-user entry history
 - Daily entry log with wipe
 - Dashboard with bar chart, daily summary
