@@ -1,4 +1,4 @@
-# Commitelite
+# Commitlite
 
 ## Purpose
 To create a web app recording activities, cheats, clean days, and punishments and statistically analyze productivity trends into graphs and feedback for the user
